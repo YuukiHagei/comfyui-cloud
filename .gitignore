@@ -1,0 +1,15 @@
+﻿# 模型与运行产物不进 Git
+models/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+output/
+input/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+cloud-key.txt

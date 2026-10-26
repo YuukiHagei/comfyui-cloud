@@ -1,0 +1,15 @@
+{
+  "_note": "Q版：SDXL + chibi LoRA + IPAdapter(参考立绘锁人设)。T4 16GB 可直接 1024x1024。",
+  "1": { "class_type": "CheckpointLoaderSimple", "inputs": { "ckpt_name": "sd_xl_base_1.0.safetensors" } },
+  "2": { "class_type": "LoraLoader", "inputs": { "model": ["1", 0], "clip": ["1", 1], "lora_name": "chibi-flat-2d-xl.safetensors", "strength_model": 0.85, "strength_clip": 0.85 } },
+  "3": { "class_type": "CLIPVisionLoader", "inputs": { "clip_name": "CLIP-ViT-H-14-laion2B.safetensors" } },
+  "4": { "class_type": "IPAdapterModelLoader", "inputs": { "ipadapter_file": "ip-adapter-plus_sdxl_vit-h.safetensors" } },
+  "5": { "class_type": "LoadImage", "inputs": { "image": "ref_stand_small.png" } },
+  "6": { "class_type": "IPAdapterAdvanced", "inputs": { "model": ["2", 0], "ipadapter": ["4", 0], "image": ["5", 0], "clip_vision": ["3", 0], "weight": 0.9, "weight_type": "linear", "combine_embeds": "concat", "start_at": 0, "end_at": 1, "embeds_scaling": "V only" } },
+  "7": { "class_type": "CLIPTextEncode", "inputs": { "text": "chibi, super deformed, 3 heads tall, big head, small body, cute, full body, standing, simple background, flat color, 2d, anime style, clean lineart, pink long hair, crimson eyes, white shirt, blue neckerchief, blue skirt", "clip": ["2", 1] } },
+  "8": { "class_type": "CLIPTextEncode", "inputs": { "text": "realistic, photorealistic, 3d, blurry, lowres, bad anatomy, extra limbs, green eyes, text, watermark, multiple views", "clip": ["2", 1] } },
+  "9": { "class_type": "EmptyLatentImage", "inputs": { "width": 1024, "height": 1024, "batch_size": 1 } },
+  "10": { "class_type": "KSampler", "inputs": { "model": ["6", 0], "seed": 12345, "steps": 30, "cfg": 6.5, "sampler_name": "euler", "scheduler": "karras", "positive": ["7", 0], "negative": ["8", 0], "latent_image": ["9", 0], "denoise": 1.0 } },
+  "11": { "class_type": "VAEDecode", "inputs": { "samples": ["10", 0], "vae": ["1", 2] } },
+  "12": { "class_type": "SaveImage", "inputs": { "images": ["11", 0], "filename_prefix": "ye_chibi" } }
+}
