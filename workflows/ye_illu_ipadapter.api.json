@@ -1,14 +1,15 @@
 {
-  "_note": "插画：SDXL + IPAdapter(参考立绘)，832x1216 竖构图。想要更'画'一点可把 cfg 调到 7、或加 zimage/写实 LoRA。",
+  "_note": "【基准版】插画：参考图固定 ye_ref_illu.png，IPAdapter 0.95（ease in），提示词强调「同参考图角色 / 同参考图调色板」。实测色差 16.0/17.7。",
+  "_baseline": { "reference": "ye_ref_illu.png", "palette": ["#CBABC7", "#866477", "#EAD0D0", "#F8E6D8", "#FFF3E1"] },
   "1": { "class_type": "CheckpointLoaderSimple", "inputs": { "ckpt_name": "sd_xl_base_1.0.safetensors" } },
   "2": { "class_type": "CLIPVisionLoader", "inputs": { "clip_name": "CLIP-ViT-H-14-laion2B.safetensors" } },
   "3": { "class_type": "IPAdapterModelLoader", "inputs": { "ipadapter_file": "ip-adapter-plus_sdxl_vit-h.safetensors" } },
-  "4": { "class_type": "LoadImage", "inputs": { "image": "ref_stand_small.png" } },
-  "5": { "class_type": "IPAdapterAdvanced", "inputs": { "model": ["1", 0], "ipadapter": ["3", 0], "image": ["4", 0], "clip_vision": ["2", 0], "weight": 0.8, "weight_type": "linear", "combine_embeds": "concat", "start_at": 0, "end_at": 1, "embeds_scaling": "V only" } },
-  "6": { "class_type": "CLIPTextEncode", "inputs": { "text": "masterpiece, best quality, anime illustration, 1girl, solo, upper body portrait, soft lighting, delicate lineart, pastel colors, pink long hair, crimson eyes, white shirt, blue neckerchief, gentle smile, looking at viewer, cherry blossom background, bokeh", "clip": ["1", 1] } },
-  "7": { "class_type": "CLIPTextEncode", "inputs": { "text": "photorealistic, 3d, cgi, lowres, blurry, bad anatomy, bad hands, extra fingers, green eyes, watermark, text, signature, multiple girls", "clip": ["1", 1] } },
+  "4": { "class_type": "LoadImage", "inputs": { "image": "ye_ref_illu.png" } },
+  "5": { "class_type": "IPAdapterAdvanced", "inputs": { "model": ["1", 0], "ipadapter": ["3", 0], "image": ["4", 0], "clip_vision": ["2", 0], "weight": 0.95, "weight_type": "ease in", "combine_embeds": "concat", "start_at": 0, "end_at": 1, "embeds_scaling": "V only" } },
+  "6": { "class_type": "CLIPTextEncode", "inputs": { "text": "masterpiece, best quality, anime illustration, 1girl, solo, upper body portrait, soft lighting, delicate lineart, pastel colors, (same character as reference:1.2), (same palette as reference:1.3), gentle smile, looking at viewer, cherry blossom bokeh background", "clip": ["1", 1] } },
+  "7": { "class_type": "CLIPTextEncode", "inputs": { "text": "photorealistic, 3d, cgi, lowres, blurry, bad anatomy, bad hands, extra fingers, watermark, text, signature, multiple girls", "clip": ["1", 1] } },
   "8": { "class_type": "EmptyLatentImage", "inputs": { "width": 832, "height": 1216, "batch_size": 1 } },
-  "9": { "class_type": "KSampler", "inputs": { "model": ["5", 0], "seed": 20261026, "steps": 30, "cfg": 6, "sampler_name": "dpmpp_2m", "scheduler": "karras", "positive": ["6", 0], "negative": ["7", 0], "latent_image": ["8", 0], "denoise": 1.0 } },
+  "9": { "class_type": "KSampler", "inputs": { "model": ["5", 0], "seed": 9005, "steps": 30, "cfg": 6, "sampler_name": "dpmpp_2m", "scheduler": "karras", "positive": ["6", 0], "negative": ["7", 0], "latent_image": ["8", 0], "denoise": 1.0 } },
   "10": { "class_type": "VAEDecode", "inputs": { "samples": ["9", 0], "vae": ["1", 2] } },
   "11": { "class_type": "SaveImage", "inputs": { "images": ["10", 0], "filename_prefix": "ye_illu" } }
 }

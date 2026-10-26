@@ -1,13 +1,14 @@
 {
-  "_note": "像素化：用真实参考插画做 img2img（denoise 0.55），姿势构图全保留。颜色想更准就把 denoise 降到 0.4、LoRA 权重降到 0.7。",
+  "_note": "【基准版】像素化：参考图固定 ye_ref_illu.png，img2img denoise 0.55。实测色差 7.0/7.2（最贴基准）。想更保色就降到 0.4。",
+  "_baseline": { "reference": "ye_ref_illu.png", "palette": ["#CBABC7", "#866477", "#EAD0D0", "#F8E6D8", "#FFF3E1"] },
   "1": { "class_type": "CheckpointLoaderSimple", "inputs": { "ckpt_name": "sd_xl_base_1.0.safetensors" } },
   "2": { "class_type": "LoraLoader", "inputs": { "model": ["1", 0], "clip": ["1", 1], "lora_name": "pixel-art-xl.safetensors", "strength_model": 0.9, "strength_clip": 0.9 } },
-  "3": { "class_type": "LoadImage", "inputs": { "image": "ref_illu.jpg" } },
-  "4": { "class_type": "ImageScale", "inputs": { "image": ["3", 0], "upscale_method": "lanczos", "width": 832, "height": 1152, "crop": "center" } },
+  "3": { "class_type": "LoadImage", "inputs": { "image": "ye_ref_illu.png" } },
+  "4": { "class_type": "ImageScale", "inputs": { "image": ["3", 0], "upscale_method": "lanczos", "width": 832, "height": 1104, "crop": "disabled" } },
   "5": { "class_type": "VAEEncode", "inputs": { "pixels": ["4", 0], "vae": ["1", 2] } },
-  "6": { "class_type": "CLIPTextEncode", "inputs": { "text": "pixel art, 16-bit game sprite, crisp square pixels, limited palette, clean outlines, anime character, pink long hair, crimson eyes, white shirt, blue neckerchief, blue skirt", "clip": ["2", 1] } },
+  "6": { "class_type": "CLIPTextEncode", "inputs": { "text": "pixel art, 16-bit game sprite, crisp square pixels, limited palette, clean outlines, same character as reference, same colors as reference, full body, white background", "clip": ["2", 1] } },
   "7": { "class_type": "CLIPTextEncode", "inputs": { "text": "blurry, smooth gradient, photorealistic, 3d render, noise, text, watermark, deformed", "clip": ["2", 1] } },
-  "8": { "class_type": "KSampler", "inputs": { "model": ["2", 0], "seed": 424242, "steps": 30, "cfg": 7, "sampler_name": "euler", "scheduler": "karras", "positive": ["6", 0], "negative": ["7", 0], "latent_image": ["5", 0], "denoise": 0.55 } },
+  "8": { "class_type": "KSampler", "inputs": { "model": ["2", 0], "seed": 9003, "steps": 30, "cfg": 7, "sampler_name": "euler", "scheduler": "karras", "positive": ["6", 0], "negative": ["7", 0], "latent_image": ["5", 0], "denoise": 0.55 } },
   "9": { "class_type": "VAEDecode", "inputs": { "samples": ["8", 0], "vae": ["1", 2] } },
   "10": { "class_type": "SaveImage", "inputs": { "images": ["9", 0], "filename_prefix": "ye_pixel_i2i" } }
 }
