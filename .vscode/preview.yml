@@ -1,0 +1,9 @@
+autoOpen: false
+
+apps:
+  - port: 8188
+    run: bash /workspace/workspace-start.sh
+    root: /workspace
+    name: ye-comfyui
+    description: 葉藝 ComfyUI · SDXL + IPAdapter + 像素/Q版 LoRA
+    autoOpen: false
