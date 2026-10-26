@@ -14,7 +14,11 @@
 set -euo pipefail
 
 MIRROR="${MIRROR:-cn}"          # cn | global
-ROOT="${ROOT:-$HOME/ye-comfyui}"
+# 默认装在 /workspace/ye-comfyui（Cloud Studio 工作空间里 /workspace 是持久盘）；
+# 没有 /workspace 的普通机器退回 $HOME/ye-comfyui
+if [ -z "${ROOT:-}" ]; then
+  if [ -d /workspace ]; then ROOT=/workspace/ye-comfyui; else ROOT="$HOME/ye-comfyui"; fi
+fi
 PORT="${PORT:-8188}"
 PY="${PY:-python3}"
 
